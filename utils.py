@@ -1,5 +1,12 @@
+import logging
+
 import configargparse
 
+
+def get_logger():
+    logger = logging.getLogger(__name__)
+    logging.basicConfig(level=logging.INFO)
+    return logger
 
 def create_main_parser():
     parser = configargparse.ArgParser(default_config_files=['.env'])

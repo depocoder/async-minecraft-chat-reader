@@ -1,13 +1,14 @@
 import asyncio
 import json
-import logging
+from _socket import gaierror
+
+from retry import retry
 
 from exceptions import NeedAuthLoginError, TokenIsNotValidError
-from utils import parse_sender_args
+from utils import parse_sender_args, get_logger
 
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+logger = get_logger()
 
 
 async def read_line(reader) -> str:
@@ -46,10 +47,10 @@ async def auth(reader, writer, token: str):
     logger.info(await read_line(reader))
 
 
+@retry(gaierror, tries=3, delay=10, jitter=2, logger=logger)
 async def send_message(host: str, port: int, message: str, username: str, token: str):
     reader, writer = await asyncio.open_connection(
         host, port)
-
     if token:
         await auth(reader, writer, token)
     else:

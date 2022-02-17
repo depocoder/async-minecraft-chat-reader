@@ -1,12 +1,18 @@
 import datetime
 import asyncio
+from _socket import gaierror
 from pathlib import Path
 
 import aiofiles
+from retry import retry
 
-from utils import parse_chat_listener_args
+from utils import parse_chat_listener_args, get_logger
 
 
+logger = get_logger()
+
+
+@retry(gaierror, tries=3, delay=10, jitter=2, logger=logger)
 async def read_chat(host, port, file_path):
     reader, writer = await asyncio.open_connection(
         host, port)
