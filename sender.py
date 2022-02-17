@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 
 from exceptions import NeedAuthLoginError, TokenIsNotValidError
@@ -20,21 +21,27 @@ async def write_bytes(writer, data: str) -> None:
     await writer.drain()
 
 
-async def auth(reader, writer, username: str, token: str):
-    read_greeting = await read_line(reader)
-    logger.info(read_greeting)
+async def register(reader, writer, username: str):
+    logger.info(await read_line(reader))
+    await write_bytes(writer, '')
+    logger.info(await read_line(reader))
+    await write_bytes(writer, username)
+    serialized_token = json.loads(await read_line(reader))
+    with open('token.json', 'w') as token_file:
+        json.dump(serialized_token, token_file)
+        logger.info('Your token written in token.json')
+    logger.info(await read_line(reader))
 
-    token = token if token else ''
+
+async def auth(reader, writer, token: str):
+    logger.info(await read_line(reader))
+
     await write_bytes(writer, token)
 
-    read_auth_greetings = await read_line(reader)
-    if read_auth_greetings == 'null':
+    serialized_token = json.loads(await read_line(reader))
+    if serialized_token is None:
         raise TokenIsNotValidError('Your token was not accepted from server')
-    logger.info(read_auth_greetings)
-    if token:
-        return
-
-    await write_bytes(writer, username)
+    logger.info(serialized_token)
     logger.info(await read_line(reader))
 
 
@@ -42,10 +49,11 @@ async def send_message(host: str, port: int, message: str, username: str, token:
     reader, writer = await asyncio.open_connection(
         host, port)
 
-    await auth(reader, writer, username, token)
+    if token:
+        await auth(reader, writer, token)
+    else:
+        await register(reader, writer, username)
 
-    chat_greeting = await read_line(reader)
-    logger.info(chat_greeting)
     message += '\n'
     await write_bytes(writer, message)
 
