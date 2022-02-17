@@ -2,24 +2,16 @@ import datetime
 import asyncio
 from pathlib import Path
 
-import configargparse
 import aiofiles
 
+from utils import parse_args
 
 DEFAULT_FILEPATH = Path(Path.cwd(), 'chat_logs.txt')
 
 
-def parse_args() -> configargparse.Namespace:
-    parser = configargparse.ArgParser(default_config_files=['.env'])
-    parser.add_argument('-p', '--port', type=int, env_var='PORT', required=True, help='port for minecraft server')
-    parser.add_argument('-i', '--ip', env_var='IP_ADDRESS', required=True, help='ip for minecraft server')
-    parser.add_argument('-f', '--file-path', env_var='FILE_PATH', help='file path for logs')
-    return parser.parse_args()
-
-
-async def read_chat(ip, port, file_path):
+async def read_chat(host, port, file_path):
     reader, writer = await asyncio.open_connection(
-        ip, port)
+        host, port)
 
     while True:
         chat_line_bytes = await reader.readline()
@@ -34,9 +26,9 @@ async def read_chat(ip, port, file_path):
 
 if __name__ == '__main__':
     options = parse_args()
-    ip = options.ip
+    host = options.host
     port = options.port
     file_path = options.file_path
     file_path = Path(file_path) if file_path else DEFAULT_FILEPATH
-    asyncio.run(read_chat(ip, port, file_path))
+    asyncio.run(read_chat(host, port, file_path))
     
