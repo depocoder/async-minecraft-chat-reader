@@ -6,8 +6,6 @@ import aiofiles
 
 from utils import parse_chat_listener_args
 
-DEFAULT_FILEPATH = Path(Path.cwd(), 'chat_logs.txt')
-
 
 async def read_chat(host, port, file_path):
     reader, writer = await asyncio.open_connection(
@@ -26,9 +24,8 @@ async def read_chat(host, port, file_path):
 
 if __name__ == '__main__':
     options = parse_chat_listener_args()
-    host = options.host
-    port = options.port
     file_path = options.file_path
-    file_path = Path(file_path) if file_path else DEFAULT_FILEPATH
-    asyncio.run(read_chat(host, port, file_path))
+    default_filepath = Path(Path.cwd(), 'chat_logs.txt')
+    file_path = Path(file_path) if file_path else default_filepath
+    asyncio.run(read_chat(options.host, options.port, file_path))
     

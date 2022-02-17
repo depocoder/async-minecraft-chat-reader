@@ -4,6 +4,7 @@ import configargparse
 def create_main_parser():
     parser = configargparse.ArgParser(default_config_files=['.env'])
     parser.add_argument('-p', '--port', type=int, required=True, help='port for minecraft server')
+    parser.add_argument('-m', '--message', required=True, help='the message you want to send')
     parser.add_argument('-hs', '--host', required=True, help='host for minecraft server')
     return parser
 

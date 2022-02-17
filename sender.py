@@ -57,14 +57,13 @@ async def send_message(host: str, port: int, message: str, username: str, token:
 
     message += '\n'
     await write_bytes(writer, message)
+    logger.info('Your message successfully sent')
 
 if __name__ == '__main__':
     options = parse_sender_args()
-    host = options.host
-    port = options.port
     token = options.token
     username = options.username
 
     if not token and not username:
         raise NeedAuthLoginError('token and username is None, use any type for auth')
-    asyncio.run(send_message(host, port, 'Hello World!', username, token))
+    asyncio.run(send_message(options.host, options.port, options.message, username, token))
