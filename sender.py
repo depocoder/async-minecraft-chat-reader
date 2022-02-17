@@ -3,7 +3,7 @@ import json
 import logging
 
 from exceptions import NeedAuthLoginError, TokenIsNotValidError
-from utils import parse_args
+from utils import parse_sender_args
 
 
 logger = logging.getLogger(__name__)
@@ -59,7 +59,7 @@ async def send_message(host: str, port: int, message: str, username: str, token:
     await write_bytes(writer, message)
 
 if __name__ == '__main__':
-    options = parse_args()
+    options = parse_sender_args()
     host = options.host
     port = options.port
     token = options.token

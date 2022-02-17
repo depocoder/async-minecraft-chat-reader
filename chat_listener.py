@@ -4,7 +4,7 @@ from pathlib import Path
 
 import aiofiles
 
-from utils import parse_args
+from utils import parse_chat_listener_args
 
 DEFAULT_FILEPATH = Path(Path.cwd(), 'chat_logs.txt')
 
@@ -25,7 +25,7 @@ async def read_chat(host, port, file_path):
 
 
 if __name__ == '__main__':
-    options = parse_args()
+    options = parse_chat_listener_args()
     host = options.host
     port = options.port
     file_path = options.file_path
