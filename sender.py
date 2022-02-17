@@ -16,7 +16,8 @@ async def read_line(reader) -> str:
 
 
 async def write_bytes(writer, data: str) -> None:
-    encoded_data = f'{data}\n'.encode()
+    sanitized_data = data.replace('\\', '\\\\')
+    encoded_data = f'{sanitized_data}\n'.encode()
     writer.write(encoded_data)
     await writer.drain()
 
