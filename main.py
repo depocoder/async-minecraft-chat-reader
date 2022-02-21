@@ -1,11 +1,12 @@
 import asyncio
+from tkinter import messagebox
 from pathlib import Path
 
 import aiofiles
 
 import gui
 from chat_listener import read_chat
-from exceptions import NeedAuthLoginError
+from exceptions import NeedAuthLoginError, TokenIsNotValidError
 from sender import ChatSender
 from utils import parse_args
 
@@ -23,8 +24,13 @@ async def load_messages(filepath: Path, messages_queue):
 
 async def send_messages(sending_queue, host, port, username, token):
     chat_sender = await ChatSender(host, port, username, token)
+
     if token:
-        await chat_sender.auth()
+        try:
+            await chat_sender.auth()
+        except TokenIsNotValidError as exc:
+            messagebox.showerror('token error', str(exc))
+            raise
     else:
         await chat_sender.register()
 
