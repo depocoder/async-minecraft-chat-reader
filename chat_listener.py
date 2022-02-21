@@ -25,7 +25,7 @@ async def read_chat(host, port, file_path):
         formatted_chat_line = f"[{formatted_time}] {decoded_chat_line}"
         async with aiofiles.open(file_path, mode="a") as file:
             await file.write(formatted_chat_line + "\n")
-        print(formatted_chat_line)
+        yield formatted_chat_line
 
 
 if __name__ == "__main__":

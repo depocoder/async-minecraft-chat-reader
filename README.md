@@ -9,8 +9,13 @@
 - Чтение чата и хранение в файле
 
 
-## Подготовка к запуску.    
+## Подготовка к запуску(Linux)    
 Установить [Python 3+](https://www.python.org/downloads/)    
+
+```shell
+sudo apt-get install python3-tk
+```
+
 
 ```shell
 pip3 install -r requirements.txt
