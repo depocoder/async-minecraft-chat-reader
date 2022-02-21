@@ -3,10 +3,9 @@ import asyncio
 from _socket import gaierror
 from pathlib import Path
 
-import aiofiles
 from retry import retry
 
-from utils import parse_chat_listener_args, get_logger
+from utils import get_logger
 
 
 logger = get_logger()
@@ -23,8 +22,6 @@ async def read_chat(host, port, file_path):
         now = datetime.datetime.now()
         formatted_time = now.strftime("%H:%M %d.%m.%y")
         formatted_chat_line = f"[{formatted_time}] {decoded_chat_line}"
-        async with aiofiles.open(file_path, mode="a") as file:
-            await file.write(formatted_chat_line + "\n")
         yield formatted_chat_line
 
 
