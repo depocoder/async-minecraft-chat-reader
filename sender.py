@@ -25,7 +25,7 @@ class ChatSender:
         self.token = token
 
     async def read_line(self) -> str:
-        chat_line_bytes = await self.reader.readline()
+        chat_line_bytes = (await asyncio.wait_for(self.reader.readline(), timeout=10))
         return chat_line_bytes.decode("utf-8").strip()
 
     async def write_bytes(self, data: str) -> None:
@@ -44,6 +44,7 @@ class ChatSender:
             json.dump(serialized_token, token_file)
             logger.info("Your token written in token.json")
         logger.info(await self.read_line())
+        return serialized_token
 
     async def auth(self):
         logger.info(await self.read_line())
@@ -55,11 +56,13 @@ class ChatSender:
             raise TokenIsNotValidError("Your token was not accepted from server")
         logger.info(serialized_token)
         logger.info(await self.read_line())
+        return serialized_token
 
     @retry(gaierror, tries=3, delay=10, jitter=2, logger=logger)
     async def send_message(self, message: str):
 
         message += "\n"
         await self.write_bytes(message)
+        await self.read_line()
         logger.info("Your message successfully sent")
 

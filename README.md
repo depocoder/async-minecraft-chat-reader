@@ -43,5 +43,5 @@ python3 chat_listener.py
 ## Запуск отправки сообщения 
 
 ```
-python3 sender.py -u depocode -hs minechat.ds.org -p 5021 -m hello world!
+python3 sender.py -u depocode -sh minechat.ds.org -sp 5021 -m hello world!
 ```
