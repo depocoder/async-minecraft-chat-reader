@@ -58,7 +58,11 @@ class ChatMessageApi:
     async def check_socket_connection(self):
         chat_sender = await ChatSender(self.send_host, self.send_port, self.username, self.token)
         while True:
-            await chat_sender.send_message('')
+            try:
+                async with timeout(2):
+                    await chat_sender.send_message('')
+            except asyncio.TimeoutError:
+                continue
             await self.watchdog_queue.put('Connection is alive. Connected to socket')
             await asyncio.sleep(1)
 
@@ -101,7 +105,7 @@ class ChatMessageApi:
     async def watch_for_connection(self):
         while True:
             try:
-                async with timeout(2) as cm:
+                async with timeout(2):
                     log = await self.watchdog_queue.get()
                     watchdog_logger.info(log)
             except asyncio.TimeoutError:
