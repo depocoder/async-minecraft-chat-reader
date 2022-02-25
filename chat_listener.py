@@ -20,7 +20,7 @@ class ChatReader:
         reader, writer = await asyncio.open_connection(
             self.host, self.port)
         while True:
-            chat_line_bytes = (await asyncio.wait_for(reader.readline(), timeout=10))
+            chat_line_bytes = await reader.readline()
             decoded_chat_line = chat_line_bytes.decode("utf-8").strip()
             now = datetime.datetime.now()
             formatted_time = now.strftime("%H:%M %d.%m.%y")
