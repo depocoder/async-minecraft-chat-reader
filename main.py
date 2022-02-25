@@ -123,8 +123,7 @@ class ChatMessageApi:
             async with aiofiles.open(self.file_path, mode="a") as file:
                 await file.write(await self.messages_queue.get() + "\n")
 
-
-if __name__ == '__main__':
+async def main():
     options = parse_args()
     token = options.token
     username = options.username
@@ -136,15 +135,16 @@ if __name__ == '__main__':
     default_file_path = Path(Path.cwd(), "chat_logs.txt")
     file_path = Path(file_path) if file_path else default_file_path
 
-    loop = asyncio.get_event_loop()
-
     chat_reader = ChatReader(options.listener_host, options.listener_port)
     chat_message_api = ChatMessageApi(file_path, options.send_host, options.send_port, username, token, )
-    asyncio.gather(
+    async with create_task_group() as tg:
+        tg.start_soon(chat_message_api.handle_connection, chat_reader)
+        tg.start_soon(chat_message_api.load_messages)
+        tg.start_soon(gui.draw, chat_message_api.messages_queue, chat_message_api.sending_queue,
+                                     chat_message_api.status_updates_queue)
 
-        *[chat_message_api.handle_connection(chat_reader), chat_message_api.load_messages(),
-          ]
-    )
 
-    loop.run_until_complete(gui.draw(chat_message_api.messages_queue, chat_message_api.sending_queue,
-                                     chat_message_api.status_updates_queue))
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+
