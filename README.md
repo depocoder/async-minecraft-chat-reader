@@ -2,7 +2,7 @@
  
 Чат клиент для minecraft сервера
 
-![](https://thumbs.gfycat.com/UnsungForthrightIvorygull-mobile.mp4)
+![async-minecraft-chat-reader functional](https://s7.gifyu.com/images/Peek-2022-03-10-11-01.gif)
 
 ## Возможности
 - Регистрация (После регистрации токен для авторизации кладется в корень с названием token.json)
