@@ -1,6 +1,8 @@
 # async-minecraft-chat-reader
  
-Взаимодействие с чатом minecraft     
+Чат клиент для minecraft сервера
+
+![](blob:https://tenor.com/7a2a4cdf-e0e5-47bf-b18f-5c49fd4693e9)
 
 ## Возможности
 - Регистрация (После регистрации токен для авторизации кладется в корень с названием token.json)
@@ -21,27 +23,10 @@ sudo apt-get install python3-tk
 pip3 install -r requirements.txt
 ```
 
-### Переменные окружения:
-Хранить переменные окружения в корне проета в файле .env
+## Запуск клиента
 
-#### Для чтения чата:
-    FILE_PATH - Путь где будет храниться файл с логами чата
-
-#### Для отправки сообщения
-    TOKEN - Токен пользователя
-    USERNAME - Имя пользователя(используется если нет токена)
-
-Для запуска чтения чата обязательные аргументы host, port.
-
-Для запуска отправки сообщения обязательные аргументы host, port, token или username 
-
-## Запуск чтения 
-
+```bash
+python3 main.py
 ```
-python3 chat_listener.py 
-```
-## Запуск отправки сообщения 
 
-```
-python3 sender.py -u depocode -sh minechat.ds.org -sp 5021 -m hello world!
-```
+

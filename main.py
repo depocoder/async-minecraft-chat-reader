@@ -12,6 +12,7 @@ from anyio import create_task_group
 import gui
 from chat_listener import ChatReader
 from exceptions import NeedAuthLoginError, TokenIsNotValidError
+from read_env import ModalReader
 from sender import ChatSender
 from utils import parse_args
 
@@ -123,7 +124,9 @@ class ChatMessageApi:
             async with aiofiles.open(self.file_path, mode="a") as file:
                 await file.write(await self.messages_queue.get() + "\n")
 
+
 async def main():
+    ModalReader()
     options = parse_args()
     token = options.token
     username = options.username
@@ -146,5 +149,8 @@ async def main():
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    try:
+        loop.run_until_complete(main())
+    except (gui.TkAppClosed, KeyboardInterrupt):
+        pass
 
