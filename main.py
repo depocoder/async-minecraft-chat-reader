@@ -12,7 +12,7 @@ from anyio import create_task_group
 import gui
 from chat_listener import ChatReader
 from exceptions import NeedAuthLoginError, TokenIsNotValidError
-from read_env import ModalReader
+from modal_reader import ModalReader
 from sender import ChatSender
 from utils import parse_args
 
