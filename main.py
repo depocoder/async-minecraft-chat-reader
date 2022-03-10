@@ -16,7 +16,7 @@ from modal_reader import ModalReader
 from sender import ChatSender
 from utils import parse_args
 
-watchdog_logger = logging.getLogger('watchdog_logger')
+watchdog_logger = logging.getLogger("watchdog_logger")
 logging.basicConfig(level=logging.INFO)
 
 
@@ -61,37 +61,37 @@ class ChatMessageApi:
         while True:
             try:
                 async with timeout(2):
-                    await chat_sender.send_message('')
+                    await chat_sender.send_message("")
             except asyncio.TimeoutError:
                 continue
-            await self.watchdog_queue.put('Connection is alive. Connected to socket')
+            await self.watchdog_queue.put("Connection is alive. Connected to socket")
             await asyncio.sleep(1)
 
     async def send_messages(self):
         while True:
             chat_sender = await ChatSender(self.send_host, self.send_port, self.username, self.token)
-            await self.watchdog_queue.put('Connection is alive. Connect to socket')
+            await self.watchdog_queue.put("Connection is alive. Connect to socket")
             if self.token:
                 try:
                     serialized_token = await chat_sender.auth()
                 except TokenIsNotValidError as exc:
-                    messagebox.showerror('token error', str(exc))
+                    messagebox.showerror("token error", str(exc))
                     raise
-                await self.watchdog_queue.put('Connection is alive. Authorization done')
+                await self.watchdog_queue.put("Connection is alive. Authorization done")
                 await self.status_updates_queue.put(gui.SendingConnectionStateChanged.ESTABLISHED)
             else:
                 serialized_token = await chat_sender.register()
-                self.token = serialized_token['account_hash']
+                self.token = serialized_token["account_hash"]
                 await self.status_updates_queue.put(gui.SendingConnectionStateChanged.ESTABLISHED)
-                await self.watchdog_queue.put('Connection is alive. Registration done')
-            nickname = serialized_token['nickname']
+                await self.watchdog_queue.put("Connection is alive. Registration done")
+            nickname = serialized_token["nickname"]
             event = gui.NicknameReceived(nickname)
             await self.status_updates_queue.put(event)
 
             while True:
                 message = await self.sending_queue.get()
                 await chat_sender.send_message(message)
-                await self.watchdog_queue.put('Connection is alive. Sent message')
+                await self.watchdog_queue.put("Connection is alive. Sent message")
 
     async def generate_messages(self, chat_reader):
         line_reader = chat_reader.read_chat()
@@ -99,7 +99,7 @@ class ChatMessageApi:
         while True:
             chat_line = await line_reader.__anext__()
             await self.status_updates_queue.put(gui.ReadConnectionStateChanged.ESTABLISHED)
-            await self.watchdog_queue.put('Connection is alive. New message in chat')
+            await self.watchdog_queue.put("Connection is alive. New message in chat")
             await self.saved_messages_queue.put(chat_line)
             await self.messages_queue.put(chat_line)
 
@@ -116,7 +116,7 @@ class ChatMessageApi:
                 await self.status_updates_queue.put(gui.ReadConnectionStateChanged.INITIATED)
                 await self.status_updates_queue.put(gui.SendingConnectionStateChanged.INITIATED)
 
-                watchdog_logger.info('2s timeout is elapsed')
+                watchdog_logger.info("2s timeout is elapsed")
                 raise ConnectionError
 
     async def save_messages(self):
@@ -147,7 +147,7 @@ async def main():
                                      chat_message_api.status_updates_queue)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(main())

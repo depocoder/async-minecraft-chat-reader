@@ -51,23 +51,23 @@ class ModalReader:
             self.account_hash_entry.insert(index=0, string=options.token)
         self.account_hash_entry.pack()
 
-        Button(text='Send info', command=self.write_env).pack()
+        Button(text="Send info", command=self.write_env).pack()
         label = Label(height=5)
         label.pack()
         self.root.mainloop()
 
     def write_env(self):
-        with open('.txt', 'w') as env_file:
-            env_file.write(f'listener_host={self.read_host_entry.get()}\n')
-            env_file.write(f'listener_port={self.read_port_entry.get()}\n')
-            env_file.write(f'send_host={self.send_host_entry.get()}\n')
-            env_file.write(f'send_port={self.send_port_entry.get()}\n')
+        with open(".txt", "w") as env_file:
+            env_file.write(f"listener_host={self.read_host_entry.get()}\n")
+            env_file.write(f"listener_port={self.read_port_entry.get()}\n")
+            env_file.write(f"send_host={self.send_host_entry.get()}\n")
+            env_file.write(f"send_port={self.send_port_entry.get()}\n")
             if self.username_entry.get():
-                env_file.write(f'username={self.username_entry.get()}\n')
+                env_file.write(f"username={self.username_entry.get()}\n")
             if self.account_hash_entry.get():
-                env_file.write(f'token={self.account_hash_entry.get()}\n')
+                env_file.write(f"token={self.account_hash_entry.get()}\n")
         self.root.destroy()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ModalReader()
