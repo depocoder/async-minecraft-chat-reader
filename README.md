@@ -2,7 +2,7 @@
  
 Чат клиент для minecraft сервера
 
-![](blob:https://tenor.com/7a2a4cdf-e0e5-47bf-b18f-5c49fd4693e9)
+![](https://thumbs.gfycat.com/UnsungForthrightIvorygull-mobile.mp4)
 
 ## Возможности
 - Регистрация (После регистрации токен для авторизации кладется в корень с названием token.json)
