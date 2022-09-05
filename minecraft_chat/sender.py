@@ -4,9 +4,9 @@ from typing import Union
 
 from _socket import gaierror
 from asyncinit import asyncinit
-from exceptions import NeedAuthLoginError, TokenIsNotValidError
 from retry import retry
 
+from minecraft_chat.exceptions import NeedAuthLoginError, TokenIsNotValidError
 from minecraft_chat.utils import get_logger
 
 logger = get_logger()
