@@ -4,16 +4,17 @@ from pathlib import Path
 from tkinter import messagebox
 
 import aiofiles
-import gui
 from _socket import gaierror
 from anyio import create_task_group
 from anyio._backends._asyncio import ExceptionGroup
 from async_timeout import timeout
-from chat_reader.chat_listener import ChatReader
-from chat_reader.exceptions import NeedAuthLoginError, TokenIsNotValidError
-from chat_reader.modal_reader import ModalReader
-from chat_reader.sender import ChatSender
-from chat_reader.utils import parse_args
+
+from minecraft_chat import gui
+from minecraft_chat.chat_listener import ChatReader
+from minecraft_chat.exceptions import NeedAuthLoginError, TokenIsNotValidError
+from minecraft_chat.modal_reader import ModalReader
+from minecraft_chat.sender import ChatSender
+from minecraft_chat.utils import parse_args
 
 watchdog_logger = logging.getLogger("watchdog_logger")
 logging.basicConfig(level=logging.INFO)

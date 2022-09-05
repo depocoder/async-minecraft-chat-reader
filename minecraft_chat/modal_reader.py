@@ -1,6 +1,6 @@
 from tkinter import Button, Entry, Label, LabelFrame, Tk
 
-from chat_reader.utils import parse_args
+from minecraft_chat.utils import parse_args
 
 
 class ModalReader:
