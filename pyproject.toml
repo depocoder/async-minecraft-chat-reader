@@ -3,10 +3,6 @@ name = "chat_reader"
 version = "0.1.0"
 description = ""
 authors = []
-packages = [
-    { include = "chat_reader" },
-    { include = "chat_reader/**/*.py" },
-]
 
 [tool.poetry.scripts]
 chat_reader = "chat_reader.main:main"
