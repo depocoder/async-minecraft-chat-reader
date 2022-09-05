@@ -2,9 +2,8 @@ import asyncio
 import datetime
 
 from _socket import gaierror
-from retry import retry
-
 from chat_reader.utils import get_logger
+from retry import retry
 
 logger = get_logger()
 

@@ -4,10 +4,9 @@ from typing import Union
 
 from _socket import gaierror
 from asyncinit import asyncinit
+from chat_reader.utils import get_logger
 from exceptions import NeedAuthLoginError, TokenIsNotValidError
 from retry import retry
-
-from chat_reader.utils import get_logger
 
 logger = get_logger()
 

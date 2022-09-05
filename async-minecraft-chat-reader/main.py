@@ -9,7 +9,6 @@ from _socket import gaierror
 from anyio import create_task_group
 from anyio._backends._asyncio import ExceptionGroup
 from async_timeout import timeout
-
 from chat_reader.chat_listener import ChatReader
 from chat_reader.exceptions import NeedAuthLoginError, TokenIsNotValidError
 from chat_reader.modal_reader import ModalReader
