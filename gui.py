@@ -1,7 +1,7 @@
-import tkinter as tk
 import asyncio
-from tkinter.scrolledtext import ScrolledText
+import tkinter as tk
 from enum import Enum
+from tkinter.scrolledtext import ScrolledText
 
 
 class TkAppClosed(Exception):
@@ -9,18 +9,18 @@ class TkAppClosed(Exception):
 
 
 class ReadConnectionStateChanged(Enum):
-    INITIATED = "устанавливаем соединение"
-    ESTABLISHED = "соединение установлено"
-    CLOSED = "соединение закрыто"
+    INITIATED = "establish connection"
+    ESTABLISHED = "the connection is established"
+    CLOSED = "connection closed"
 
     def __str__(self):
         return str(self.value)
 
 
 class SendingConnectionStateChanged(Enum):
-    INITIATED = "устанавливаем соединение"
-    ESTABLISHED = "соединение установлено"
-    CLOSED = "соединение закрыто"
+    INITIATED = "establish connection"
+    ESTABLISHED = "the connection is established"
+    CLOSED = "connection closed"
 
     def __str__(self):
         return str(self.value)
@@ -55,7 +55,7 @@ async def update_conversation_history(panel, messages_queue):
         if panel.index("end-1c") != "1.0":
             panel.insert("end", "\n")
         panel.insert("end", msg)
-        # TODO сделать промотку умной, чтобы не мешала просматривать историю сообщений
+        # TODO make scroll smart, for watching history of messages
         # ScrolledText.frame
         # ScrolledText.vbar
         panel.yview(tk.END)
@@ -65,20 +65,20 @@ async def update_conversation_history(panel, messages_queue):
 async def update_status_panel(status_labels, status_updates_queue):
     nickname_label, read_label, write_label = status_labels
 
-    read_label["text"] = f"Чтение: нет соединения"
-    write_label["text"] = f"Отправка: нет соединения"
-    nickname_label["text"] = f"Имя пользователя: неизвестно"
+    read_label["text"] = f"Reading: no connection"
+    write_label["text"] = f"Sending: no connection"
+    nickname_label["text"] = f"username: unknow"
 
     while True:
         msg = await status_updates_queue.get()
         if isinstance(msg, ReadConnectionStateChanged):
-            read_label["text"] = f"Чтение: {msg}"
+            read_label["text"] = f"Reading: {msg}"
 
         if isinstance(msg, SendingConnectionStateChanged):
-            write_label["text"] = f"Отправка: {msg}"
+            write_label["text"] = f"Sending: {msg}"
 
         if isinstance(msg, NicknameReceived):
-            nickname_label["text"] = f"Имя пользователя: {msg.nickname}"
+            nickname_label["text"] = f"Username: {msg.nickname}"
 
 
 def create_status_panel(root_frame):
@@ -89,17 +89,29 @@ def create_status_panel(root_frame):
     connections_frame.pack(side="left")
 
     nickname_label = tk.Label(
-        connections_frame, height=1, fg="grey", font="arial 10", anchor="w"
+        connections_frame,
+        height=1,
+        fg="grey",
+        font="arial 10",
+        anchor="w",
     )
     nickname_label.pack(side="top", fill=tk.X)
 
     status_read_label = tk.Label(
-        connections_frame, height=1, fg="grey", font="arial 10", anchor="w"
+        connections_frame,
+        height=1,
+        fg="grey",
+        font="arial 10",
+        anchor="w",
     )
     status_read_label.pack(side="top", fill=tk.X)
 
     status_write_label = tk.Label(
-        connections_frame, height=1, fg="grey", font="arial 10", anchor="w"
+        connections_frame,
+        height=1,
+        fg="grey",
+        font="arial 10",
+        anchor="w",
     )
     status_write_label.pack(side="top", fill=tk.X)
 
@@ -123,11 +135,12 @@ async def draw(messages_queue, sending_queue, status_updates_queue):
     input_field.pack(side="left", fill=tk.X, expand=True)
 
     input_field.bind(
-        "<Return>", lambda event: process_new_message(input_field, sending_queue)
+        "<Return>",
+        lambda event: process_new_message(input_field, sending_queue),
     )
 
     send_button = tk.Button(input_frame)
-    send_button["text"] = "Отправить"
+    send_button["text"] = "Send"
     send_button["command"] = lambda: process_new_message(input_field, sending_queue)
     send_button.pack(side="left")
 
