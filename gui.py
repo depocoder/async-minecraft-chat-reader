@@ -65,9 +65,9 @@ async def update_conversation_history(panel, messages_queue):
 async def update_status_panel(status_labels, status_updates_queue):
     nickname_label, read_label, write_label = status_labels
 
-    read_label["text"] = f"Reading: no connection"
-    write_label["text"] = f"Sending: no connection"
-    nickname_label["text"] = f"username: unknow"
+    read_label["text"] = "Reading: no connection"
+    write_label["text"] = "Sending: no connection"
+    nickname_label["text"] = "username: unknow"
 
     while True:
         msg = await status_updates_queue.get()
