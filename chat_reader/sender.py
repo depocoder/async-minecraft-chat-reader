@@ -6,7 +6,8 @@ from _socket import gaierror
 from asyncinit import asyncinit
 from exceptions import NeedAuthLoginError, TokenIsNotValidError
 from retry import retry
-from utils import get_logger
+
+from chat_reader.utils import get_logger
 
 logger = get_logger()
 
