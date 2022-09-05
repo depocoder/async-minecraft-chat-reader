@@ -1,15 +1,14 @@
 import asyncio
 import logging
-from _socket import gaierror
-from tkinter import messagebox
 from pathlib import Path
+from tkinter import messagebox
 
 import aiofiles
+import gui
+from _socket import gaierror
+from anyio import create_task_group
 from anyio._backends._asyncio import ExceptionGroup
 from async_timeout import timeout
-from anyio import create_task_group
-
-import gui
 from chat_listener import ChatReader
 from exceptions import NeedAuthLoginError, TokenIsNotValidError
 from modal_reader import ModalReader
@@ -65,7 +64,10 @@ class ChatMessageApi:
 
     async def check_socket_connection(self):
         chat_sender = await ChatSender(
-            self.send_host, self.send_port, self.username, self.token
+            self.send_host,
+            self.send_port,
+            self.username,
+            self.token,
         )
         while True:
             try:
@@ -79,7 +81,10 @@ class ChatMessageApi:
     async def send_messages(self):
         while True:
             chat_sender = await ChatSender(
-                self.send_host, self.send_port, self.username, self.token
+                self.send_host,
+                self.send_port,
+                self.username,
+                self.token,
             )
             await self.watchdog_queue.put("Connection is alive. Connect to socket")
             if self.token:
@@ -90,13 +95,13 @@ class ChatMessageApi:
                     raise
                 await self.watchdog_queue.put("Connection is alive. Authorization done")
                 await self.status_updates_queue.put(
-                    gui.SendingConnectionStateChanged.ESTABLISHED
+                    gui.SendingConnectionStateChanged.ESTABLISHED,
                 )
             else:
                 serialized_token = await chat_sender.register()
                 self.token = serialized_token["account_hash"]
                 await self.status_updates_queue.put(
-                    gui.SendingConnectionStateChanged.ESTABLISHED
+                    gui.SendingConnectionStateChanged.ESTABLISHED,
                 )
                 await self.watchdog_queue.put("Connection is alive. Registration done")
             nickname = serialized_token["nickname"]
@@ -114,7 +119,7 @@ class ChatMessageApi:
         while True:
             chat_line = await line_reader.__anext__()
             await self.status_updates_queue.put(
-                gui.ReadConnectionStateChanged.ESTABLISHED
+                gui.ReadConnectionStateChanged.ESTABLISHED,
             )
             await self.watchdog_queue.put("Connection is alive. New message in chat")
             await self.saved_messages_queue.put(chat_line)
@@ -128,17 +133,17 @@ class ChatMessageApi:
                     watchdog_logger.info(log)
             except asyncio.TimeoutError:
                 await self.status_updates_queue.put(
-                    gui.ReadConnectionStateChanged.CLOSED
+                    gui.ReadConnectionStateChanged.CLOSED,
                 )
                 await self.status_updates_queue.put(
-                    gui.SendingConnectionStateChanged.CLOSED
+                    gui.SendingConnectionStateChanged.CLOSED,
                 )
                 await asyncio.sleep(1)
                 await self.status_updates_queue.put(
-                    gui.ReadConnectionStateChanged.INITIATED
+                    gui.ReadConnectionStateChanged.INITIATED,
                 )
                 await self.status_updates_queue.put(
-                    gui.SendingConnectionStateChanged.INITIATED
+                    gui.SendingConnectionStateChanged.INITIATED,
                 )
 
                 watchdog_logger.info("2s timeout is elapsed")

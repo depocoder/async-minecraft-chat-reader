@@ -1,11 +1,9 @@
-import datetime
 import asyncio
+import datetime
+
 from _socket import gaierror
-
 from retry import retry
-
 from utils import get_logger
-
 
 logger = get_logger()
 

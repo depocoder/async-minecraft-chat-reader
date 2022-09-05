@@ -1,4 +1,4 @@
-from tkinter import Tk, LabelFrame, Entry, Button, Label
+from tkinter import Button, Entry, Label, LabelFrame, Tk
 
 from utils import parse_args
 

@@ -1,14 +1,12 @@
 import asyncio
 import json
-from _socket import gaierror
 from typing import Union
 
+from _socket import gaierror
 from asyncinit import asyncinit
-from retry import retry
-
 from exceptions import NeedAuthLoginError, TokenIsNotValidError
+from retry import retry
 from utils import get_logger
-
 
 logger = get_logger()
 
@@ -16,12 +14,16 @@ logger = get_logger()
 @asyncinit
 class ChatSender:
     async def __init__(
-        self, host, port, username: Union[str, None], token: Union[str, None]
+        self,
+        host,
+        port,
+        username: Union[str, None],
+        token: Union[str, None],
     ):
         self.reader, self.writer = await asyncio.open_connection(host, port)
         if not token and not username:
             raise NeedAuthLoginError(
-                "token and username is None, use any type for auth"
+                "token and username is None, use any type for auth",
             )
 
         self.username = username
