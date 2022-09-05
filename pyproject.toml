@@ -6,7 +6,7 @@ authors = ["Your Name <you@example.com>"]
 
 
 [tool.poetry.scripts]
-space-game = "chat_reader:main"
+chat_reader = "chat_reader:main"
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -21,8 +21,15 @@ anyio = ">=3.5.0"
 black = "^22.8.0"
 flake8 = "3.9.0"
 flakehell = "^0.9.0"
+autoflake8 = "^0.4.0"
+bandit = "^1.7.4"
+yesqa = "^1.4.0"
+isort = "^5.10.1"
+autoflake = "^1.5.3"
+
+[tool.flakehell.plugins]
+"*" = ["+*"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
