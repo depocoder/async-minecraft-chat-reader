@@ -8,5 +8,3 @@ class NeedAuthLoginError(BaseMinecraftChatException):
 
 class TokenIsNotValidError(BaseMinecraftChatException):
     pass
-
-

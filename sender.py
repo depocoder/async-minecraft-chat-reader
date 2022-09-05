@@ -15,17 +15,20 @@ logger = get_logger()
 
 @asyncinit
 class ChatSender:
-    async def __init__(self, host, port, username: Union[str, None], token: Union[str, None]):
-        self.reader, self.writer = await asyncio.open_connection(
-            host, port)
+    async def __init__(
+        self, host, port, username: Union[str, None], token: Union[str, None]
+    ):
+        self.reader, self.writer = await asyncio.open_connection(host, port)
         if not token and not username:
-            raise NeedAuthLoginError("token and username is None, use any type for auth")
+            raise NeedAuthLoginError(
+                "token and username is None, use any type for auth"
+            )
 
         self.username = username
         self.token = token
 
     async def read_line(self) -> str:
-        chat_line_bytes = (await asyncio.wait_for(self.reader.readline(), timeout=10))
+        chat_line_bytes = await asyncio.wait_for(self.reader.readline(), timeout=10)
         return chat_line_bytes.decode("utf-8").strip()
 
     async def write_bytes(self, data: str) -> None:
@@ -65,4 +68,3 @@ class ChatSender:
         await self.write_bytes(message)
         await self.read_line()
         logger.info("Your message successfully sent")
-

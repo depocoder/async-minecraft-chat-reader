@@ -21,7 +21,14 @@ logging.basicConfig(level=logging.INFO)
 
 
 class ChatMessageApi:
-    def __init__(self, file_path: Path, host, port, username, token, ):
+    def __init__(
+        self,
+        file_path: Path,
+        host,
+        port,
+        username,
+        token,
+    ):
         self.file_path = file_path
         self.send_host = host
         self.send_port = port
@@ -57,7 +64,9 @@ class ChatMessageApi:
                 await self.messages_queue.put(chat_line.rstrip())
 
     async def check_socket_connection(self):
-        chat_sender = await ChatSender(self.send_host, self.send_port, self.username, self.token)
+        chat_sender = await ChatSender(
+            self.send_host, self.send_port, self.username, self.token
+        )
         while True:
             try:
                 async with timeout(2):
@@ -69,7 +78,9 @@ class ChatMessageApi:
 
     async def send_messages(self):
         while True:
-            chat_sender = await ChatSender(self.send_host, self.send_port, self.username, self.token)
+            chat_sender = await ChatSender(
+                self.send_host, self.send_port, self.username, self.token
+            )
             await self.watchdog_queue.put("Connection is alive. Connect to socket")
             if self.token:
                 try:
@@ -78,11 +89,15 @@ class ChatMessageApi:
                     messagebox.showerror("token error", str(exc))
                     raise
                 await self.watchdog_queue.put("Connection is alive. Authorization done")
-                await self.status_updates_queue.put(gui.SendingConnectionStateChanged.ESTABLISHED)
+                await self.status_updates_queue.put(
+                    gui.SendingConnectionStateChanged.ESTABLISHED
+                )
             else:
                 serialized_token = await chat_sender.register()
                 self.token = serialized_token["account_hash"]
-                await self.status_updates_queue.put(gui.SendingConnectionStateChanged.ESTABLISHED)
+                await self.status_updates_queue.put(
+                    gui.SendingConnectionStateChanged.ESTABLISHED
+                )
                 await self.watchdog_queue.put("Connection is alive. Registration done")
             nickname = serialized_token["nickname"]
             event = gui.NicknameReceived(nickname)
@@ -98,7 +113,9 @@ class ChatMessageApi:
         await self.status_updates_queue.put(gui.ReadConnectionStateChanged.INITIATED)
         while True:
             chat_line = await line_reader.__anext__()
-            await self.status_updates_queue.put(gui.ReadConnectionStateChanged.ESTABLISHED)
+            await self.status_updates_queue.put(
+                gui.ReadConnectionStateChanged.ESTABLISHED
+            )
             await self.watchdog_queue.put("Connection is alive. New message in chat")
             await self.saved_messages_queue.put(chat_line)
             await self.messages_queue.put(chat_line)
@@ -110,11 +127,19 @@ class ChatMessageApi:
                     log = await self.watchdog_queue.get()
                     watchdog_logger.info(log)
             except asyncio.TimeoutError:
-                await self.status_updates_queue.put(gui.ReadConnectionStateChanged.CLOSED)
-                await self.status_updates_queue.put(gui.SendingConnectionStateChanged.CLOSED)
+                await self.status_updates_queue.put(
+                    gui.ReadConnectionStateChanged.CLOSED
+                )
+                await self.status_updates_queue.put(
+                    gui.SendingConnectionStateChanged.CLOSED
+                )
                 await asyncio.sleep(1)
-                await self.status_updates_queue.put(gui.ReadConnectionStateChanged.INITIATED)
-                await self.status_updates_queue.put(gui.SendingConnectionStateChanged.INITIATED)
+                await self.status_updates_queue.put(
+                    gui.ReadConnectionStateChanged.INITIATED
+                )
+                await self.status_updates_queue.put(
+                    gui.SendingConnectionStateChanged.INITIATED
+                )
 
                 watchdog_logger.info("2s timeout is elapsed")
                 raise ConnectionError
@@ -139,12 +164,22 @@ async def main():
     file_path = Path(file_path) if file_path else default_file_path
 
     chat_reader = ChatReader(options.listener_host, options.listener_port)
-    chat_message_api = ChatMessageApi(file_path, options.send_host, options.send_port, username, token, )
+    chat_message_api = ChatMessageApi(
+        file_path,
+        options.send_host,
+        options.send_port,
+        username,
+        token,
+    )
     async with create_task_group() as tg:
         tg.start_soon(chat_message_api.handle_connection, chat_reader)
         tg.start_soon(chat_message_api.load_messages)
-        tg.start_soon(gui.draw, chat_message_api.messages_queue, chat_message_api.sending_queue,
-                                     chat_message_api.status_updates_queue)
+        tg.start_soon(
+            gui.draw,
+            chat_message_api.messages_queue,
+            chat_message_api.sending_queue,
+            chat_message_api.status_updates_queue,
+        )
 
 
 if __name__ == "__main__":
@@ -153,4 +188,3 @@ if __name__ == "__main__":
         loop.run_until_complete(main())
     except (gui.TkAppClosed, KeyboardInterrupt):
         pass
-
