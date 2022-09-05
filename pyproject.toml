@@ -5,7 +5,7 @@ description = ""
 authors = []
 
 [tool.poetry.scripts]
-minecraft_chat = "minecraft_chat.main:main"
+minecraft_chat = "minecraft_chat.main:run_main_loop"
 
 [tool.poetry.dependencies]
 python = "^3.9"

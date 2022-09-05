@@ -188,9 +188,13 @@ async def main():
         )
 
 
-if __name__ == "__main__":
+def run_main_loop():
     loop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(main())
     except (gui.TkAppClosed, KeyboardInterrupt):
         pass
+
+
+if __name__ == "__main__":
+    run_main_loop()
