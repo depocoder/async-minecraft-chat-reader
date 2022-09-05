@@ -14,10 +14,16 @@ Chat client for minecraft server
 
 ## How to start(Linux)
 
-Install dependency for tkinter
+Install dependency for tkinter for Ubuntu/Debian
 ```shell
 sudo apt-get install python3-tk
 ```
+
+Install dependency for tkinter for Arch/Monjaro
+```shell
+sudo pacman -S tk
+```
+
 
 Clone the project
 ```shell
