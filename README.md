@@ -1,12 +1,12 @@
 # async-minecraft-chat-reader
- 
+
 Chat client for minecraft server
 
 ![async-minecraft-chat-reader functional](https://s7.gifyu.com/images/Peek-2022-03-10-11-01.gif)
 
 ## Features
 - Registraition
-  - save token after registraition  
+  - save token after registraition
 - Auth by token
 - Send message
 - Read and store messages
@@ -29,4 +29,9 @@ run chat
 chat_reader
 ```
 
+## for devs
 
+commit hook, [read more](https://pre-commit.com/)
+```shell
+pre-commit install
+```
