@@ -1,32 +1,32 @@
 # async-minecraft-chat-reader
  
-Чат клиент для minecraft сервера
+Chat client for minecraft server
 
 ![async-minecraft-chat-reader functional](https://s7.gifyu.com/images/Peek-2022-03-10-11-01.gif)
 
-## Возможности
-- Регистрация (После регистрации токен для авторизации кладется в корень с названием token.json)
-- Авторизация по токену
-- Отправка сообщения
-- Чтение чата и хранение в файле
+## Features
+- Registraition
+  - save token after registraition  
+- Auth by token
+- Send message
+- Read and store messages
 
 
-## Подготовка к запуску(Linux)    
-Установить [Python 3+](https://www.python.org/downloads/)    
+## How to start(Linux)
 
+Install dependency for tkinter
 ```shell
 sudo apt-get install python3-tk
 ```
 
-
+Clone the project
 ```shell
-pip3 install -r requirements.txt
+pip install git+https://github.com/depocoder/async-minecraft-chat-reader.git
 ```
 
-## Запуск клиента
-
+run chat
 ```bash
-python3 main.py
+chat_reader
 ```
 
 
