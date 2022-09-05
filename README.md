@@ -29,9 +29,9 @@ run chat
 chat_reader
 ```
 
-## for devs
+## For developer
 
-commit hook, [read more](https://pre-commit.com/)
+commit hook [read more](https://pre-commit.com/)
 ```shell
 pre-commit install
 ```
