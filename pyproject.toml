@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "async-minecraft-chat-reader"
+name = "minecraft_chat"
 version = "0.1.0"
 description = ""
 authors = []
 
 [tool.poetry.scripts]
-chat_reader = "chat_reader.main:main"
+minecraft_chat = "minecraft_chat.main:main"
 
 [tool.poetry.dependencies]
 python = "^3.9"
