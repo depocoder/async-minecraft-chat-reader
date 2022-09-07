@@ -1,6 +1,17 @@
+import asyncio
 import logging
+from contextlib import asynccontextmanager
 
 import configargparse
+
+
+@asynccontextmanager
+async def managed_open_connection(host, port):
+    try:
+        reader, writer = await asyncio.open_connection(host, port)
+        yield reader, writer
+    finally:
+        writer.close()
 
 
 def get_logger():
