@@ -69,7 +69,7 @@ class ChatSender:
         await self.write_bytes(self.token)
 
         serialized_token = json.loads(await self.read_line())
-        if serialized_token is None:
+        if not serialized_token:
             raise TokenIsNotValidError("Your token was not accepted from server")
         logger.info(serialized_token)
         logger.info(await self.read_line())
