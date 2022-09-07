@@ -9,8 +9,8 @@ class TkAppClosed(Exception):
 
 
 class ReadConnectionStateChanged(Enum):
-    INITIATED = "establish connection"
-    ESTABLISHED = "the connection is established"
+    INITIATED = "establishing connection"
+    ESTABLISHED = "connection was established"
     CLOSED = "connection closed"
 
     def __str__(self):
@@ -18,8 +18,8 @@ class ReadConnectionStateChanged(Enum):
 
 
 class SendingConnectionStateChanged(Enum):
-    INITIATED = "establish connection"
-    ESTABLISHED = "the connection is established"
+    INITIATED = "establishing connection"
+    ESTABLISHED = "connection was established"
     CLOSED = "connection closed"
 
     def __str__(self):
