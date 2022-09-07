@@ -3,6 +3,7 @@ import json
 from typing import Union
 
 from _socket import gaierror
+from async_timeout import timeout
 from asyncinit import asyncinit
 from retry import retry
 
@@ -31,8 +32,9 @@ class ChatSender:
         self.token = token
 
     async def read_line(self) -> str:
-        chat_line_bytes = await asyncio.wait_for(self.reader.readline(), timeout=5)
-        return chat_line_bytes.decode("utf-8").strip()
+        async with timeout(5):
+            chat_line_bytes = await self.reader.readline()
+            return chat_line_bytes.decode("utf-8").strip()
 
     async def write_bytes(self, data: str) -> None:
         sanitized_data = data.replace("\\", "\\\\")
