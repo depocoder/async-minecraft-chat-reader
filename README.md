@@ -37,7 +37,17 @@ minecraft_chat
 
 ## For developer
 
+install deps
+```shell
+pip install poetry
+poetry install
+```
+
 commit hook [read more](https://pre-commit.com/)
 ```shell
 pre-commit install
+```
+
+```shell
+poetry run python3 main.py
 ```
