@@ -32,7 +32,7 @@ pip install git+https://github.com/depocoder/async-minecraft-chat-reader.git
 
 run chat
 ```bash
-chat_reader
+minecraft_chat
 ```
 
 ## For developer
