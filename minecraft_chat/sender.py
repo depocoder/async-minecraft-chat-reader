@@ -22,7 +22,8 @@ class ChatSender:
         username: Union[str, None],
         token: Union[str, None],
     ):
-        self.reader, self.writer = await asyncio.open_connection(host, port)
+        self.host = host
+        self.port = port
         if not token and not username:
             raise NeedAuthLoginError(
                 "token and username is None, use any type for auth",
@@ -30,6 +31,14 @@ class ChatSender:
 
         self.username = username
         self.token = token
+
+    async def __aenter__(self):
+        self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb):
+        self.writer.close()
+        await self.writer.wait_closed()
 
     async def read_line(self) -> str:
         async with timeout(1):
