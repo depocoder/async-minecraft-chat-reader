@@ -131,7 +131,7 @@ class ChatMessageApi:
     async def watch_for_connection(self):
         while True:
             try:
-                async with timeout(2):
+                async with timeout(1):
                     log = await self.watchdog_queue.get()
                     watchdog_logger.info(log)
             except asyncio.TimeoutError:
@@ -149,7 +149,7 @@ class ChatMessageApi:
                     gui.SendingConnectionStateChanged.INITIATED,
                 )
 
-                watchdog_logger.info("2s timeout is elapsed")
+                watchdog_logger.info("1s timeout is elapsed")
                 raise ConnectionError
 
     async def save_messages(self):

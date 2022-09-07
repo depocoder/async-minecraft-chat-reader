@@ -32,7 +32,7 @@ class ChatSender:
         self.token = token
 
     async def read_line(self) -> str:
-        async with timeout(5):
+        async with timeout(1):
             chat_line_bytes = await self.reader.readline()
             return chat_line_bytes.decode("utf-8").strip()
 
