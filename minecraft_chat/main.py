@@ -35,10 +35,10 @@ class ChatMessageApi:
         self.token = token
         self.username = username
 
-        self.messages_queue = asyncio.Queue()
         self.status_updates_queue = asyncio.Queue()
         self.watchdog_queue = asyncio.Queue()
         self.saved_messages_queue = asyncio.Queue()
+        self.messages_queue = asyncio.Queue()
         self.sending_queue = asyncio.Queue()
 
     async def handle_connection(self, chat_reader):
@@ -117,6 +117,7 @@ class ChatMessageApi:
     async def generate_messages(self, chat_reader):
         line_reader = chat_reader.read_chat()
         await self.status_updates_queue.put(gui.ReadConnectionStateChanged.INITIATED)
+
         while True:
             chat_line = await line_reader.__anext__()
             await self.status_updates_queue.put(
@@ -153,7 +154,7 @@ class ChatMessageApi:
     async def save_messages(self):
         while True:
             async with aiofiles.open(self.file_path, mode="a") as file:
-                await file.write(await self.messages_queue.get() + "\n")
+                await file.write(await self.saved_messages_queue.get() + "\n")
 
 
 async def main():
