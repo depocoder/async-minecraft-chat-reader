@@ -64,55 +64,61 @@ class ChatMessageApi:
                 await self.messages_queue.put(chat_line.rstrip())
 
     async def check_socket_connection(self):
-        chat_sender = await ChatSender(
+        async with await ChatSender(
             self.send_host,
             self.send_port,
             self.username,
             self.token,
-        )
-        while True:
-            try:
-                async with timeout(2):
-                    await chat_sender.send_message("")
-            except asyncio.TimeoutError:
-                continue
-            await self.watchdog_queue.put("Connection is alive. Connected to socket")
-            await asyncio.sleep(1)
+        ) as chat_sender:
+            while True:
+                try:
+                    async with timeout(2):
+                        await chat_sender.send_message("")
+                except asyncio.TimeoutError:
+                    continue
+                await self.watchdog_queue.put(
+                    "Connection is alive. Connected to socket",
+                )
+                await asyncio.sleep(1)
 
     async def send_messages(self):
         while True:
-            chat_sender = await ChatSender(
+            async with await ChatSender(
                 self.send_host,
                 self.send_port,
                 self.username,
                 self.token,
-            )
-            await self.watchdog_queue.put("Connection is alive. Connect to socket")
-            if self.token:
-                try:
-                    serialized_token = await chat_sender.auth()
-                except TokenIsNotValidError as exc:
-                    messagebox.showerror("token error", str(exc))
-                    raise
-                await self.watchdog_queue.put("Connection is alive. Authorization done")
-                await self.status_updates_queue.put(
-                    gui.SendingConnectionStateChanged.ESTABLISHED,
-                )
-            else:
-                serialized_token = await chat_sender.register()
-                self.token = serialized_token["account_hash"]
-                await self.status_updates_queue.put(
-                    gui.SendingConnectionStateChanged.ESTABLISHED,
-                )
-                await self.watchdog_queue.put("Connection is alive. Registration done")
-            nickname = serialized_token["nickname"]
-            event = gui.NicknameReceived(nickname)
-            await self.status_updates_queue.put(event)
+            ) as chat_sender:
+                await self.watchdog_queue.put("Connection is alive. Connect to socket")
+                if self.token:
+                    try:
+                        serialized_token = await chat_sender.auth()
+                    except TokenIsNotValidError as exc:
+                        messagebox.showerror("token error", str(exc))
+                        raise
+                    await self.watchdog_queue.put(
+                        "Connection is alive. Authorization done",
+                    )
+                    await self.status_updates_queue.put(
+                        gui.SendingConnectionStateChanged.ESTABLISHED,
+                    )
+                else:
+                    serialized_token = await chat_sender.register()
+                    self.token = serialized_token["account_hash"]
+                    await self.status_updates_queue.put(
+                        gui.SendingConnectionStateChanged.ESTABLISHED,
+                    )
+                    await self.watchdog_queue.put(
+                        "Connection is alive. Registration done",
+                    )
+                nickname = serialized_token["nickname"]
+                event = gui.NicknameReceived(nickname)
+                await self.status_updates_queue.put(event)
 
-            while True:
-                message = await self.sending_queue.get()
-                await chat_sender.send_message(message)
-                await self.watchdog_queue.put("Connection is alive. Sent message")
+                while True:
+                    message = await self.sending_queue.get()
+                    await chat_sender.send_message(message)
+                    await self.watchdog_queue.put("Connection is alive. Sent message")
 
     async def generate_messages(self, chat_reader):
         line_reader = chat_reader.read_chat()
