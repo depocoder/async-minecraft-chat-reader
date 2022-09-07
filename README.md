@@ -14,12 +14,12 @@ Chat client for minecraft server
 
 ## How to start(Linux)
 
-Install dependency for tkinter for Ubuntu/Debian
+Install dependency for tkinter (Ubuntu/Debian)
 ```shell
 sudo apt-get install python3-tk
 ```
 
-Install dependency for tkinter for Arch/Monjaro
+Install dependency for tkinter Arch/Monjaro)
 ```shell
 sudo pacman -S tk
 ```
@@ -30,20 +30,20 @@ Clone the project
 pip install git+https://github.com/depocoder/async-minecraft-chat-reader.git
 ```
 
-run chat
+Run chat
 ```bash
 minecraft_chat
 ```
 
 ## For developer
 
-install deps
+Install dependencies
 ```shell
 pip install poetry
 poetry install
 ```
 
-commit hook [read more](https://pre-commit.com/)
+Commit hook [read more](https://pre-commit.com/)
 ```shell
 pre-commit install
 ```
