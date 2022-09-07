@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import time
 from pathlib import Path
 from tkinter import messagebox
 
@@ -52,7 +51,7 @@ class ChatMessageApi:
                     tg.start_soon(self.generate_messages, chat_reader)
                     tg.start_soon(self.watch_for_connection)
             except (ConnectionError, gaierror, ExceptionGroup):
-                time.sleep(5)
+                await asyncio.sleep(5)
 
     async def load_messages(self):
         if not self.file_path.exists():
@@ -131,7 +130,7 @@ class ChatMessageApi:
     async def watch_for_connection(self):
         while True:
             try:
-                async with timeout(1):
+                async with timeout(2):
                     log = await self.watchdog_queue.get()
                     watchdog_logger.info(log)
             except asyncio.TimeoutError:
@@ -149,7 +148,7 @@ class ChatMessageApi:
                     gui.SendingConnectionStateChanged.INITIATED,
                 )
 
-                watchdog_logger.info("1s timeout is elapsed")
+                watchdog_logger.info("2s timeout is elapsed")
                 raise ConnectionError
 
     async def save_messages(self):
