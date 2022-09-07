@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import time
 from pathlib import Path
 from tkinter import messagebox
 
@@ -51,7 +52,7 @@ class ChatMessageApi:
                     tg.start_soon(self.generate_messages, chat_reader)
                     tg.start_soon(self.watch_for_connection)
             except (ConnectionError, gaierror, ExceptionGroup):
-                await asyncio.sleep(5)
+                time.sleep(5)
 
     async def load_messages(self):
         if not self.file_path.exists():
