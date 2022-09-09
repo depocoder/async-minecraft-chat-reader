@@ -116,3 +116,4 @@ dmypy.json
 .idea
 /chat_logs.txt
 /token.json
+/.txt
