@@ -1,5 +1,4 @@
 import asyncio
-import logging
 from pathlib import Path
 from tkinter import messagebox
 
@@ -14,10 +13,11 @@ from minecraft_chat.chat_listener import ChatReader
 from minecraft_chat.exceptions import NeedAuthLoginError, TokenIsNotValidError
 from minecraft_chat.modal_reader import ModalReader
 from minecraft_chat.sender import ChatSender
-from minecraft_chat.utils import parse_args
+from minecraft_chat.utils import get_logger, parse_args
 
-watchdog_logger = logging.getLogger("watchdog_logger")
-logging.basicConfig(level=logging.INFO)
+watchdog_logger = get_logger()
+SLEEP_INTERVAL = 5
+SEND_TIMEOUT = WATCH_DOG_TIMEOUT = 2
 
 
 class ChatMessageApi:
@@ -51,7 +51,7 @@ class ChatMessageApi:
                     tg.start_soon(self.generate_messages, chat_reader)
                     tg.start_soon(self.watch_for_connection)
             except (ConnectionError, gaierror, ExceptionGroup):
-                await asyncio.sleep(5)
+                await asyncio.sleep(SLEEP_INTERVAL)
 
     async def load_messages(self):
         if not self.file_path.exists():
@@ -72,7 +72,7 @@ class ChatMessageApi:
         ) as chat_sender:
             while True:
                 try:
-                    async with timeout(2):
+                    async with timeout(SEND_TIMEOUT):
                         await chat_sender.send_message("")
                 except asyncio.TimeoutError:
                     continue
@@ -136,7 +136,7 @@ class ChatMessageApi:
     async def watch_for_connection(self):
         while True:
             try:
-                async with timeout(2):
+                async with timeout(WATCH_DOG_TIMEOUT):
                     log = await self.watchdog_queue.get()
                     watchdog_logger.info(log)
             except asyncio.TimeoutError:
@@ -154,7 +154,7 @@ class ChatMessageApi:
                     gui.SendingConnectionStateChanged.INITIATED,
                 )
 
-                watchdog_logger.info("2s timeout is elapsed")
+                watchdog_logger.info(f"{WATCH_DOG_TIMEOUT}s timeout is elapsed")
                 raise ConnectionError
 
     async def save_messages(self):

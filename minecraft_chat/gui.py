@@ -117,7 +117,7 @@ def create_status_panel(root_frame):
     )
     status_write_label.pack(side="top", fill=tk.X)
 
-    return (nickname_label, status_read_label, status_write_label)
+    return nickname_label, status_read_label, status_write_label
 
 
 async def draw(messages_queue, sending_queue, status_updates_queue):
