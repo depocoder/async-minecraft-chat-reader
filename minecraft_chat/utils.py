@@ -12,6 +12,7 @@ async def managed_open_connection(host, port):
         yield reader, writer
     finally:
         writer.close()
+        await writer.wait_closed()
 
 
 def get_logger():
